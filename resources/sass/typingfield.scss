@@ -1,0 +1,93 @@
+.typing-field {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    border: solid 4px $primary;
+    height: 400px;
+    border-radius: 10px;
+    font-size: 2rem;
+    padding: 0.6em 1em;
+    overflow: hidden;
+    cursor: text;
+
+    &__text {
+        padding: 1rem 0.6rem;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1;
+        font-family: 'Roboto Mono', monospace;
+    }
+
+    &__overlay {
+        position: absolute;
+        top: 0; right: 0;
+        bottom: 0; left: 0;
+    }
+
+    &__speed {
+        position: absolute;
+        right: 0;
+    }
+
+    &__wrapper {
+        width: 100%;
+        min-height: 90vh;
+        display: grid;
+        place-items: center;
+    }
+
+    &__input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border: none;
+        outline: none;
+        opacity: 0;
+    }
+
+    &__word {
+        display: inline-block;
+    }
+
+    &__letter {
+        display: inline-block;
+        padding: 0 0.05em;
+        margin: 0.05em 0.05em;
+        color: #fafafa;
+    }
+
+    &__letter--placeholder {
+        color: #afafaf;
+    }
+
+    &__letter--typed {
+        color: #fafafa;
+        border-radius: 5px;
+        background-color: #666;
+    }
+
+    &__letter--correct {
+        background-color: rgba(0, 255, 0, 0.3);
+    }
+
+    &__letter--incorrect {
+        background-color: rgba(255, 0, 0, 0.3);
+    }
+
+    &__letter--cursor {
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #fafafa;
+            animation: cursorBlink 1s infinite;
+        }
+    }
+}
