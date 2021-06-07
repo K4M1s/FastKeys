@@ -72,6 +72,7 @@ class TypingField {
             } else {
                 this.removeLastLetter();
             }
+            this.scrollView()
         }
     }
 
@@ -128,7 +129,7 @@ class TypingField {
     }
 
     getCursorPosition() {
-        const cursor = this.element.querySelector('.typing-field__letter--cursor');
+        this.cursor = this.cursor ? this.cursor : this.element.querySelector('.typing-field__letter--cursor');
         return cursor.offsetTop;
     }
 
@@ -157,12 +158,12 @@ class TypingField {
     }
 
     scrollView() {
-        console.log(this.getCursorPosition());
-        console.log((this.lineHeight + this.padding));
         if (this.getCursorPosition() >= (this.lineHeight + this.padding)) {
             this.currentMarginTop -= this.lineHeight;
-            this.textField.style.marginTop = `${this.currentMarginTop}px`;
+        } else if (this.getCursorPosition() < 0) {
+            this.currentMarginTop += this.lineHeight;
         }
+        this.textField.style.marginTop = `${this.currentMarginTop}px`;
     }
 
     getCorrectWords() {
