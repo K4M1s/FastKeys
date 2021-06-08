@@ -3,5 +3,5 @@
     <div class="typing-field__overlay">
         <div class="typing-field__speed"></div>
     </div>
-    <input class="typing-field__input">
+    <input class="typing-field__input" autocorrect="off" autocapitalize="none">
 </div>
