@@ -1,0 +1,27 @@
+.button {
+    display: inline-block;
+    font-size: 1rem;
+    padding: .7em 1.5em;
+    outline: 0;
+    border: 0;
+    border-radius: .7em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 30%);
+    transition: box-shadow ease-in-out 0.25s;
+
+    &--primary {
+        background-color: $primary;
+        border: 2px solid $primary;
+        color: $text;
+
+        &:hover {
+            box-shadow: 0px 0px 4px 2px $primary-shadow;
+        }
+    }
+
+    &--outline {
+        background-color: transparent;
+    }
+
+}

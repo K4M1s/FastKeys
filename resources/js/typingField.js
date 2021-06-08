@@ -1,6 +1,7 @@
 import Letter, { LETTER_TYPE } from "./Letter";
 import Space from "./Space";
 import Word from "./Word";
+import Modal from "./modal";
 
 class TypingField {
     constructor(element) {
@@ -103,7 +104,6 @@ class TypingField {
 
     registerInputChangeListener() {
         const input = this.element.querySelector('.typing-field__input');
-        console.log(input)
         input.addEventListener('input', (e) => {
             const data = e.data;
             if (data.length > 0) {
@@ -129,8 +129,8 @@ class TypingField {
     }
 
     getCursorPosition() {
-        this.cursor = this.cursor ? this.cursor : this.element.querySelector('.typing-field__letter--cursor');
-        return cursor.offsetTop;
+        this.cursor = this.element.querySelector('.typing-field__letter--cursor');
+        return this.cursor.offsetTop;
     }
 
     setCursor() {
@@ -144,9 +144,7 @@ class TypingField {
         }
     }
 
-    onWordFinish(word) {
-        console.log('finished word: ', word);
-        
+    onWordFinish(word) {  
         if (word == this.text.slice(-1)[0]) {
             this.endGame();
         } else {
@@ -193,7 +191,10 @@ class TypingField {
         this.endTime = new Date();
         this.textField.disabled = true;
         console.log('the game has ended')
-        alert(`Final speed was ${this.calculateFinalSpeed()} WPM`);
+        const modal = new Modal('Congrats!')
+            .setContent(`You have finished this test with speed of ${this.calculateFinalSpeed()} WPM`)
+            .setButtons([{text: 'Close', classList: ['button', 'button--primary', 'button--outline'], action: () => {modal.hide()}}])
+            .show();
     }
 }
 

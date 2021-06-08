@@ -1,4 +1,5 @@
 require('./bootstrap');
+import Modal from "./modal";
 import TypingField from "./typingField";
 
 const typingFieldElement = document.querySelector(".typing-field");
