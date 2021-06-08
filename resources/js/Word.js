@@ -68,4 +68,8 @@ export default class Word {
     isValid() {
         return this.letters.filter(letter => letter.isValid()).length == this.letters.length;
     }
+
+    getLetters() {
+        return this.letters;
+    }
 }

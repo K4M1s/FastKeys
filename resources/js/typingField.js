@@ -4,12 +4,19 @@ import Word from "./Word";
 import Modal from "./modal";
 
 class TypingField {
-    constructor(element) {
+    constructor(element, text) {
         this.element = element
         this.textField = this.element.querySelector(".typing-field__text");
         this.inputField = this.element.querySelector(".typing-field__input");
+        this.userInterface = document.querySelector(".user-interface");
 
-        this.text = this.parseText(this.getText());
+        this.userInterfaceElements = {
+            progress: this.userInterface.querySelector("#ui-progress-value"),
+            typos: this.userInterface.querySelector("#ui-typos-value"),
+            speed: this.userInterface.querySelector("#ui-speed-value"),
+        }
+
+        this.text = this.parseText(text);
         this.renderText();
 
         this.registerKeyPressListener();
@@ -29,12 +36,20 @@ class TypingField {
         this.padding = this.getCursorPosition();
         this.lineHeight = this.element.querySelector('.typing-field__word').offsetHeight;
         this.currentMarginTop = 0;
+
+        this.gameLoop = null;
     }
 
-    getText() {
-        // GET TEXT FROM API
-        const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut magna eget velit suscipit ultrices. Praesent eget augue purus. Sed posuere nisi nisi, eu aliquam.';
-        return text;
+    startGame() {
+        this.startTime = new Date();
+        this.gameLoop = this.startGameLoop();
+    }
+
+
+    startGameLoop() {
+        return setInterval(()=> {
+            this.updateUI();
+        }, 1000 / 30);
     }
 
     parseText(text) {
@@ -115,8 +130,12 @@ class TypingField {
     }
 
     processTypedLetter(letter) {
+        if (this.endTime) {
+            return;
+        }
+
         if (this.startTime == null) {
-            this.startTime = new Date();
+            this.startGame();
         }
 
         this.currentWord.addTypedLetter(letter);
@@ -125,7 +144,6 @@ class TypingField {
             this.onWordFinish(this.currentWord);
         }
         this.setCursor();
-        this.displaySpeed(this.calculateCurrentSpeed());
     }
 
     getCursorPosition() {
@@ -150,13 +168,14 @@ class TypingField {
         } else {
             this.currentWordIndex++;
             this.currentWord = this.text[this.currentWordIndex];
+            this.setCursor();
         }
         
         this.scrollView();
     }
 
     scrollView() {
-        if (this.getCursorPosition() >= (this.lineHeight + this.padding)) {
+        if (this.getCursorPosition() >= ((this.lineHeight * 2) + this.padding)) {
             this.currentMarginTop -= this.lineHeight;
         } else if (this.getCursorPosition() < 0) {
             this.currentMarginTop += this.lineHeight;
@@ -183,8 +202,29 @@ class TypingField {
         return Math.floor(wordsPerSecond * 60);
     }
 
-    displaySpeed(speed) {
-        this.element.querySelector(".typing-field__speed").innerText = `${speed} wpm`;
+    calculateProgress() {
+        return Math.ceil((this.currentWordIndex / (this.text.length - 1)) * 100);
+    }
+
+    calculateTypos() {
+        let typos = 0;
+
+        this.text.forEach(word => {
+            typos += word.getLetters().filter(letter => letter.getTypedLetter() != null && !letter.isValid()).length;
+        })
+
+        return typos;
+    }
+
+    updateUI(final = false) {
+        this.userInterfaceElements.progress.innerText = `${this.calculateProgress()}%`;
+        this.userInterfaceElements.typos.innerText = this.calculateTypos();
+        this.userInterfaceElements.speed.innerText = `${final ? this.calculateFinalSpeed() : this.calculateCurrentSpeed()} WPM`;
+    }
+
+    enableScroll() {
+        this.textField.style.marginTop = "0px";
+        this.element.style.overflow = "auto";
     }
 
     endGame() {
@@ -193,8 +233,13 @@ class TypingField {
         console.log('the game has ended')
         const modal = new Modal('Congrats!')
             .setContent(`You have finished this test with speed of ${this.calculateFinalSpeed()} WPM`)
-            .setButtons([{text: 'Close', classList: ['button', 'button--primary', 'button--outline'], action: () => {modal.hide()}}])
+            .setButtons([{text: 'Close', classList: ['button', 'button--primary', 'button--outline'], action: () => {
+                modal.hide()
+                this.enableScroll();
+            }}])
             .show();
+        clearInterval(this.gameLoop);
+        this.updateUI(true);
     }
 }
 
