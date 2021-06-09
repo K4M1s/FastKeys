@@ -1,8 +1,6 @@
 import Letter, { LETTER_TYPE } from "./Letter";
 import Space from "./Space";
 import Word from "./Word";
-import Modal from "./modal";
-import { forEach } from "lodash";
 
 class TypingField {
     constructor(element, text) {

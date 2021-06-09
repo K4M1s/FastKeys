@@ -1,4 +1,5 @@
 import Gamemode from "../Gamemode";
+import Modal from "../modal";
 
 export default class LoremIpsum extends Gamemode {
     constructor(text) {
