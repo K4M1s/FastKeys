@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TextController;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PageController::class, 'index'])->name('index');
+
+Route::get('/game', [GameController::class, 'index'])->name('game/index');
+Route::get('/game/loremipsum', [GameController::class, 'loremipsum'])->name('game/loremipsum');
 
 Route::get('/text/{type}/{length}', [TextController::class, 'text']);

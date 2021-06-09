@@ -2,6 +2,7 @@ import Letter, { LETTER_TYPE } from "./Letter";
 import Space from "./Space";
 import Word from "./Word";
 import Modal from "./modal";
+import { forEach } from "lodash";
 
 class TypingField {
     constructor(element, text) {
@@ -46,6 +47,10 @@ class TypingField {
     startGame() {
         this.startTime = new Date();
         this.gameLoop = this.startGameLoop();
+
+        this.fireEvent('gameStart', {
+            startTime: this.startTime
+        })
     }
 
 
@@ -141,10 +146,11 @@ class TypingField {
             this.startGame();
         }
 
-        this.currentWord.addTypedLetter(letter);
+        const addedLetter = this.currentWord.addTypedLetter(letter);
+        this.letterTyped(addedLetter);
 
         if (!this.currentWord.hasEmptyLetters()) {
-            this.onWordFinish(this.currentWord);
+            this.wordFinished(this.currentWord);
         }
         this.setCursor();
     }
@@ -165,7 +171,13 @@ class TypingField {
         }
     }
 
-    onWordFinish(word) {  
+    letterTyped(letter) {
+        this.fireEvent('letterType', {
+            letter
+        });
+    }
+
+    wordFinished(word) {  
         if (word == this.text.slice(-1)[0]) {
             this.endGame();
         } else {
@@ -176,13 +188,21 @@ class TypingField {
         
         this.securityCheck(word)
         this.scrollView();
+
+        this.fireEvent('wordType', {
+            word
+        });
     }
 
     securityCheck(word) {
-        if (!word.isValid()) {
-            this.lastInvalidWordTime = new Date();
+        if (word.isSpace()) {
+            return;
+        }
+        if (!word.isValid() && word.getCorrectness() < 0.6) {
+            this.lastInvalidWordTime = this.lastInvalidWordTime ? this.lastInvalidWordTime : new Date();
             this.invalidWordsInRow++;
         } else {
+            this.lastInvalidWordTime = null;
             this.invalidWordsInRow = 0;
         }
 
@@ -235,6 +255,14 @@ class TypingField {
         return typos;
     }
 
+    calculateCorrectness() {
+        let correctness = 0;
+        this.text.forEach(word => {
+            correctness += word.getCorrectness();
+        })
+        return correctness / this.text.length;
+    }
+
     updateUI(final = false) {
         this.userInterfaceElements.progress.innerText = `${this.calculateProgress()}%`;
         this.userInterfaceElements.typos.innerText = this.calculateTypos();
@@ -249,30 +277,74 @@ class TypingField {
     breakGame() {
         this.endTime = new Date();
         this.textField.disabled = true;
-        const modal = new Modal('You motherfucker!')
-            .setContent(`Stop hiting your keybor you idiot!`)
-            .setButtons([{text: 'Fuck me', classList: ['button', 'button--danger', 'button--outline'], action: () => {
-                modal.hide()
-                this.enableScroll();
-            }}])
-            .show();
+
+        this.enableScroll();
         clearInterval(this.gameLoop);
         this.updateUI();
+
+        this.fireEvent('gameBreak', {})
     }
 
     endGame() {
         this.endTime = new Date();
         this.textField.disabled = true;
-        const modal = new Modal('Congrats!')
-            .setContent(`You have finished this test with speed of ${this.calculateFinalSpeed()} WPM`)
-            .setButtons([{text: 'Close', classList: ['button', 'button--primary', 'button--outline'], action: () => {
-                modal.hide()
-                this.enableScroll();
-            }}])
-            .show();
         clearInterval(this.gameLoop);
         this.updateUI(true);
+
+        this.fireEvent('gameEnd', {
+            speed: this.calculateFinalSpeed(),
+            correctness: this.calculateCorrectness(),
+            typos: this.calculateTypos()
+        });
     }
+
+    onGameStartCallbacks = [];
+    onGameEndCallbacks = [];
+    onGameBreakCallbacks = [];
+
+    onWordTypeCallbacks = [];
+    onLetterTypeCallbacks = [];
+
+    fireEvent(type, data) {
+        switch(type) {
+            case "gameStart":
+                this.onGameStartCallbacks.forEach(callback => { callback(data) });
+                break;
+            case "gameEnd":
+                this.onGameEndCallbacks.forEach(callback => { callback(data) });
+                break;
+            case "gameBreak":
+                this.onGameBreakCallbacks.forEach(callback => { callback(data) });
+                break;
+            case "wordType":
+                this.onWordTypeCallbacks.forEach(callback => { callback(data) });
+                break;
+            case "letterType":
+                this.onWordTypeCallbacks.forEach(callback => { callback(data) });
+                break;
+        }
+    }
+
+    onGameStart(callback) {
+        this.onGameStartCallbacks.push(callback);
+    }
+
+    onGameEnd(callback) {
+        this.onGameEndCallbacks.push(callback);
+    }
+
+    onGameBreak(callback) {
+        this.onGameBreakCallbacks.push(callback);
+    }
+
+    onWordType(callback) {
+        this.onWordTypeCallbacks.push(callback);
+    }
+
+    onLetterType(callback) {
+        this.onLetterTypeCallbacks.push(callback);
+    }
+
 }
 
 export default TypingField;

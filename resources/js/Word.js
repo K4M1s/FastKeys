@@ -20,6 +20,7 @@ export default class Word {
     addTypedLetter(letter) {
         const emptyLetter = this.letters.filter(letter => letter.getTypedLetter() == null)[0];
         emptyLetter.setTypedLetter(letter);
+        return emptyLetter;
     }
 
     removeLastLetter() {
@@ -67,6 +68,10 @@ export default class Word {
 
     isValid() {
         return this.letters.filter(letter => letter.isValid()).length == this.letters.length;
+    }
+
+    getCorrectness() {
+        return this.letters.filter(letter => letter.isValid()).length / this.letters.length;
     }
 
     getLetters() {

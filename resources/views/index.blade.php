@@ -1,9 +1,5 @@
 <x-layout>
     <x-container>
-        <div class="typing-field__wrapper">
-            <x-typing-field/>
-            <x-user-inferface />
-        </div>
-        <x-modal />
+        <a href="{{ route('game/index') }}" class="button button--primary">Start typing game</a>
     </x-container>
 </x-layout>
