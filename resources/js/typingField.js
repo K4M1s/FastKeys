@@ -38,6 +38,9 @@ class TypingField {
         this.currentMarginTop = 0;
 
         this.gameLoop = null;
+
+        this.lastInvalidWordTime = null;
+        this.invalidWordsInRow = 0;
     }
 
     startGame() {
@@ -171,7 +174,23 @@ class TypingField {
             this.setCursor();
         }
         
+        this.securityCheck(word)
         this.scrollView();
+    }
+
+    securityCheck(word) {
+        if (!word.isValid()) {
+            this.lastInvalidWordTime = new Date();
+            this.invalidWordsInRow++;
+        } else {
+            this.invalidWordsInRow = 0;
+        }
+
+        if (this.invalidWordsInRow > 6) {
+            if (this.lastInvalidWordTime.getTime() - new Date().getTime() < 5000){ 
+                this.breakGame();
+            }
+        }
     }
 
     scrollView() {
@@ -227,10 +246,23 @@ class TypingField {
         this.element.style.overflow = "auto";
     }
 
+    breakGame() {
+        this.endTime = new Date();
+        this.textField.disabled = true;
+        const modal = new Modal('You motherfucker!')
+            .setContent(`Stop hiting your keybor you idiot!`)
+            .setButtons([{text: 'Fuck me', classList: ['button', 'button--danger', 'button--outline'], action: () => {
+                modal.hide()
+                this.enableScroll();
+            }}])
+            .show();
+        clearInterval(this.gameLoop);
+        this.updateUI();
+    }
+
     endGame() {
         this.endTime = new Date();
         this.textField.disabled = true;
-        console.log('the game has ended')
         const modal = new Modal('Congrats!')
             .setContent(`You have finished this test with speed of ${this.calculateFinalSpeed()} WPM`)
             .setButtons([{text: 'Close', classList: ['button', 'button--primary', 'button--outline'], action: () => {

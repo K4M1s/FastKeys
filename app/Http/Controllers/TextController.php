@@ -19,7 +19,7 @@ class TextController extends Controller
             return response()->json(['error' => true, 'msg' => 'Length may be between 1 and 400'], 400);
         }
 
-        $data = ['errpr' => false, 'text' => ''];
+        $data = ['error' => false, 'text' => ''];
 
         switch($type) {
             case "lorem": 

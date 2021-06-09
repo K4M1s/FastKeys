@@ -107,6 +107,14 @@
 .button--primary:hover {
   box-shadow: 0px 0px 4px 2px #e49e3575;
 }
+.button--danger {
+  background-color: #dc3545;
+  border: 2px solid #dc3545;
+  color: #ffffff;
+}
+.button--danger:hover {
+  box-shadow: 0px 0px 4px 2px #dc354575;
+}
 .button--outline {
   background-color: transparent;
 }
