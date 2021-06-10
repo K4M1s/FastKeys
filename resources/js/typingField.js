@@ -88,6 +88,10 @@ class TypingField {
     }
 
     processPressedKey(key, ctrl) {
+        if (this.endTime) {
+            return;
+        }
+
         if (key == "Backspace") {
             if (ctrl) {
                 this.removeLastWord();
@@ -288,6 +292,7 @@ class TypingField {
         this.textField.disabled = true;
         clearInterval(this.gameLoop);
         this.updateUI(true);
+        this.enableScroll();
 
         this.fireEvent('gameEnd', {
             speed: this.calculateFinalSpeed(),
