@@ -244,7 +244,14 @@ class TypingField {
     }
 
     calculateProgress() {
-        return Math.ceil((this.currentWordIndex / (this.text.length - 1)) * 100);
+        let numOfLetters = 0;
+        let numOfTypedLetters = 0;
+        this.text.forEach(word => {numOfLetters += word.getLetters().length});
+        for (let i=0; i<=this.currentWordIndex; i++) {
+            numOfTypedLetters += this.text[i].getLetters().filter(letter => letter.getTypedLetter() != null).length
+        }
+        console.log(numOfLetters, numOfTypedLetters);
+        return Math.floor((numOfTypedLetters / numOfLetters)* 100);
     }
 
     calculateTypos() {
