@@ -1,9 +1,17 @@
+import { result } from "lodash";
 import Letter, { LETTER_TYPE } from "./Letter";
 import Space from "./Space";
 import Word from "./Word";
 
-class TypingField {
-    constructor(element, text) {
+const TYPING_FIELD_TEST_MODE = {
+    FINISH_TEXT_MODE: 1,
+    TIME_MODE: 2,
+}
+
+export {TYPING_FIELD_TEST_MODE}
+
+export default class TypingField {
+    constructor(element, text, mode, time) {
         this.element = element
         this.textField = this.element.querySelector(".typing-field__text");
         this.inputField = this.element.querySelector(".typing-field__input");
@@ -13,6 +21,7 @@ class TypingField {
             progress: this.userInterface.querySelector("#ui-progress-value"),
             typos: this.userInterface.querySelector("#ui-typos-value"),
             speed: this.userInterface.querySelector("#ui-speed-value"),
+            time: this.userInterface.querySelector("#ui-time-value"),
         }
 
         this.text = this.parseText(text);
@@ -40,11 +49,24 @@ class TypingField {
 
         this.lastInvalidWordTime = null;
         this.invalidWordsInRow = 0;
+
+        this.testMode = mode;
+        this.testTime = time;
+        console.log(this.testMode);
+        if (this.testMode == TYPING_FIELD_TEST_MODE.TIME_MODE) {
+            this.userInterfaceElements.time.parentElement.classList.remove("user-interface__element--hide");
+            this.userInterfaceElements.progress.parentElement.classList.add("user-interface__element--hide");
+        }
     }
 
     startGame() {
         this.startTime = new Date();
+        this.currentWord.startedTyping();
         this.gameLoop = this.startGameLoop();
+
+        if (this.testMode == TYPING_FIELD_TEST_MODE.TIME_MODE) {
+            this.startTimer();
+        }
 
         this.fireEvent('gameStart', {
             startTime: this.startTime
@@ -56,6 +78,12 @@ class TypingField {
         return setInterval(()=> {
             this.updateUI();
         }, 1000 / 30);
+    }
+
+    startTimer() {
+        this.testTimeTimer = setTimeout(()=>{
+            this.endGame();
+        }, this.testTime * 1000);
     }
 
     parseText(text) {
@@ -179,12 +207,15 @@ class TypingField {
         });
     }
 
-    wordFinished(word) {  
+    wordFinished(word) {
+        word.finishedTyping();
+
         if (word == this.text.slice(-1)[0]) {
             this.endGame();
         } else {
             this.currentWordIndex++;
             this.currentWord = this.text[this.currentWordIndex];
+            this.currentWord.startedTyping();
             this.setCursor();
         }
         
@@ -215,6 +246,10 @@ class TypingField {
         }
     }
 
+    getTypedWords() {
+        return this.text.filter(word => word.hasEmptyLetters() == false);
+    }
+
     scrollView() {
         if (this.getCursorPosition() >= ((this.lineHeight * 2) + this.padding)) {
             this.currentMarginTop -= this.lineHeight;
@@ -237,6 +272,9 @@ class TypingField {
     }
 
     calculateFinalSpeed() {
+        if (this.testMode == TYPING_FIELD_TEST_MODE.TIME_MODE) {
+            return this.getCorrectWords().length;
+        }
         const diff = (this.endTime.getTime() - this.startTime.getTime()) / 1000;
         const correctWords = this.getCorrectWords();
         const wordsPerSecond = correctWords.length / diff;
@@ -250,15 +288,14 @@ class TypingField {
         for (let i=0; i<=this.currentWordIndex; i++) {
             numOfTypedLetters += this.text[i].getLetters().filter(letter => letter.getTypedLetter() != null).length
         }
-        console.log(numOfLetters, numOfTypedLetters);
         return Math.floor((numOfTypedLetters / numOfLetters)* 100);
     }
 
     calculateTypos() {
         let typos = 0;
 
-        this.text.forEach(word => {
-            typos += word.getLetters().filter(letter => letter.getTypedLetter() != null && !letter.isValid()).length;
+        this.getTypedWords().forEach(word => {
+            typos += word.getLetters().filter(letter => !letter.isValid()).length;
         })
 
         return typos;
@@ -266,21 +303,62 @@ class TypingField {
 
     calculateCorrectness() {
         let correctness = 0;
-        this.text.forEach(word => {
+        this.getTypedWords().forEach(word => {
             correctness += word.getCorrectness();
         })
-        return correctness / this.text.length;
+        return correctness / this.getTypedWords().length;
+    }
+
+    calculateLeftTime() {
+        const timeleft = this.startTime.getTime() + (this.testTime * 1000) - new Date().getTime();
+        
+        return new Date(timeleft < 0 ? 0 : timeleft);
     }
 
     updateUI(final = false) {
         this.userInterfaceElements.progress.innerText = `${this.calculateProgress()}%`;
         this.userInterfaceElements.typos.innerText = this.calculateTypos();
         this.userInterfaceElements.speed.innerText = `${final ? this.calculateFinalSpeed() : this.calculateCurrentSpeed()} WPM`;
+        const timeleft = this.calculateLeftTime();
+        this.userInterfaceElements.time.innerText = `${timeleft.getMinutes()}:${timeleft.getSeconds() < 10 ? '0' : ''}${timeleft.getSeconds()}`;
     }
 
     enableScroll() {
         this.textField.style.marginTop = "0px";
         this.element.style.overflow = "auto";
+    }
+
+    getWordsTime() {
+        let time = 0;
+        this.getTypedWords().forEach(word => {
+            time += word.getTime();
+        });
+        return time;
+    }
+
+    getWordsTimestamps() {
+        let result = [];
+        this.getTypedWords().forEach(word => {
+            result.push({
+                word: word.getWord(),
+                timestamps: word.getTimestamps()
+            })
+        })
+        return result;
+    }
+
+    getLetterDeltaTime() {
+        let smallest = Infinity;
+        let biggest = 0;
+        this.getTypedWords().forEach(word => {
+            if (smallest > word.getLetterTime()) {
+                smallest = word.getLetterTime();
+            }
+            if (biggest < word.getLetterTime()) {
+                biggest = word.getLetterTime();
+            }
+        })
+        return Math.abs(smallest - biggest);
     }
 
     breakGame() {
@@ -304,7 +382,9 @@ class TypingField {
         this.fireEvent('gameEnd', {
             speed: this.calculateFinalSpeed(),
             correctness: this.calculateCorrectness(),
-            typos: this.calculateTypos()
+            typos: this.calculateTypos(),
+            words: this.getWordsTimestamps(),
+            letterDeltaTime: this.getLetterDeltaTime()
         });
     }
 
@@ -356,5 +436,3 @@ class TypingField {
     }
 
 }
-
-export default TypingField;

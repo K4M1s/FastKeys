@@ -1,0 +1,66 @@
+.hamburger {
+    position: relative;
+    display: none;
+    width: 40px;
+    height: 40px;
+    z-index: 1001;
+    $checkbox: '.hamburger__checkbox';
+    margin-left: auto;
+
+    &__checkbox {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 1002;
+    }
+
+    &__line {
+        position: absolute;
+        width: 100%;
+        height: 6px;
+        background-color: $text;
+        transition: all ease 0.3s;
+        
+        &--top {
+            top: 0;
+            left: 0;
+        }
+
+        #{$checkbox}:checked ~ &--top {
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+        }
+
+        &--middle {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #{$checkbox}:checked ~ &--middle {
+            opacity: 0;
+        }
+
+        &--bottom {
+            top: 100%;
+            left: 0;
+            transform: translateY(-100%);
+        }
+
+        #{$checkbox}:checked ~ &--bottom {
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+        }
+    }
+
+    @media (max-width: 768px) {
+        display: block;
+    }
+}

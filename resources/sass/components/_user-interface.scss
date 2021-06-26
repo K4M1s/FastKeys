@@ -12,6 +12,10 @@
     &__element {
         display: block;
         color: $text;
+
+        &--hide {
+            display: none;
+        }
     }
 
 }

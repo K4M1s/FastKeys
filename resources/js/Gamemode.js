@@ -1,14 +1,14 @@
-import TypingField from "./typingField";
+import TypingField, {TYPING_FIELD_TEST_MODE} from "./typingField";
 
 export default class Gamemode {
     name = "Gamemode name";
     description = "Longer gamemode description.";
     game = null;
 
-    constructor(text) {
+    constructor(text, mode=TYPING_FIELD_TEST_MODE.FINISH_TEXT_MODE, time=0) {
         const typingFieldElement = document.querySelector(".typing-field");
 
-        this.game = new TypingField(typingFieldElement, text);
+        this.game = new TypingField(typingFieldElement, text, mode, time);
         this.registerEvents();
     }
 

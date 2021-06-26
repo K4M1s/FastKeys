@@ -17,6 +17,7 @@ export default class LoremIpsum extends Gamemode {
                 modal.hide()
             }}])
             .show();
+        console.log(data);
     }
 
     onGameBreak(data) {

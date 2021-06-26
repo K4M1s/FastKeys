@@ -1,0 +1,27 @@
+.auth {
+    &__email-verification {
+        &__footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    &__errors {
+        background-color: $card;
+        border: solid 3px $danger;
+        border-radius: 10px;
+        font-size: 1rem;
+        padding: 0.6em 1em;
+        box-shadow: 0px 0px 2px 2px $gray-shadow;
+
+        &__header {
+            font-size: 2em;
+            margin-bottom: 1em;
+        }
+
+        &__content {
+            font-size: 1em;
+        }
+    }
+}

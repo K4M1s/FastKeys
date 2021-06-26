@@ -1,5 +1,5 @@
-<x-layout>
+<x-app-layout>
     <x-container>
-        <a href="{{ route('game/index') }}" class="button button--primary">Start typing game</a>
+        <h1>Practice typing with Us!</h1>
     </x-container>
-</x-layout>
+</x-app-layout>

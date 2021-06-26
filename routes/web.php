@@ -3,6 +3,7 @@
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TextController;
+use Faker\Provider\ar_JO\Text;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PageController::class, 'index'])->name('index');
 
 Route::get('/game', [GameController::class, 'index'])->name('game/index');
-Route::get('/game/loremipsum', [GameController::class, 'loremipsum'])->name('game/loremipsum');
+Route::get('/game/{game}', [GameController::class, 'game'])->name('game');
+Route::get('/game/{game}/text', [GameController::class, 'text'])->name('game/text');
 
-Route::get('/text/{type}/{length}', [TextController::class, 'text']);
+
+require __DIR__.'/auth.php';

@@ -1,4 +1,4 @@
-<x-layout>
+<x-app-layout>
     <x-container>
         <div class="typing-field__wrapper">
             <x-typing-field/>
@@ -10,4 +10,4 @@
             initGame('loremipsum');
         }
     </script>
-</x-layout>
+</x-app-layout>

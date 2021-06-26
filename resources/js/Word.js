@@ -5,6 +5,9 @@ export default class Word {
     constructor() {
         this.letters = [];
         this.createElement();
+
+        this.startedTypingTime = null;
+        this.finishedTypingTime = null;
     }
 
     createElement() {
@@ -17,9 +20,22 @@ export default class Word {
         letter.appendElement(this.element);
     }
 
+    startedTyping() {
+        if (this.letters[0].getTypedLetter() == null) {
+            this.startedTypingTime = new Date();
+        }
+    }
+
+    finishedTyping() {
+        if (this.letters[this.letters.length - 1].getTypedLetter() != null) {
+            this.finishedTypingTime = new Date();
+        }
+    }
+
     addTypedLetter(letter) {
         const emptyLetter = this.letters.filter(letter => letter.getTypedLetter() == null)[0];
         emptyLetter.setTypedLetter(letter);
+
         return emptyLetter;
     }
 
@@ -76,5 +92,27 @@ export default class Word {
 
     getLetters() {
         return this.letters;
+    }
+
+    getWord() {
+        let letters = this.letters.map(letter => letter.getLetter());
+        return letters.join('');
+    }
+
+    getTime() {
+        return this.finishedTypingTime.getTime() - this.startedTypingTime.getTime();
+    }
+
+    getLetterTime() {
+        return this.getTime() / this.letters.length;
+    }
+
+    getTimestamps() {
+        return {
+            start: this.startedTypingTime.getTime(),
+            end: this.finishedTypingTime.getTime(),
+            time: this.getTime(),
+            letterTime: this.getLetterTime()
+        }
     }
 }

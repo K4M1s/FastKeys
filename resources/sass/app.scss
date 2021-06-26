@@ -1,22 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Mono&display=swap');
+@import "abstracts/colors";
+@import "abstracts/animations";
 
-@import "colors";
-@import "animations";
-@import "container";
-@import "button";
-@import "navbar";
-@import "typingfield";
-@import "user-interface";
-@import "modal";
-@import "spinner";
+@import "core/reset";
+@import "core/typography";
+
+@import "layout/container";
+@import "layout/navbar";
+
+@import "pages/auth";
+
+@import "components/button";
+@import "components/hamburger";
+@import "components/typingfield";
+@import "components/user-interface";
+@import "components/modal";
+@import "components/spinner";
+@import "components/form";
 
 * {
     box-sizing: border-box;
-}
-
-html {
-    font-size: 16px;
-    font-family: 'Nunito', sans-serif;
 }
 
 body {
