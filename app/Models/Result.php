@@ -13,4 +13,8 @@ class Result extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function data() {
+        return $this->hasOne(ResultData::class);
+    }
 }

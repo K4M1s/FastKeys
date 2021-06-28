@@ -8,7 +8,7 @@ export default class ResultManager {
         formdata.append('speed', result.speed)
         formdata.append('accuracy', result.accuracy)
         formdata.append('gamemode', result.game)
-        formdata.append('gamedata', result.data)
+        formdata.append('gamedata', JSON.stringify(result.data))
 
         const response = await axios({
             method: "POST",
