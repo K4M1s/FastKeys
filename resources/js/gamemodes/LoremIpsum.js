@@ -4,6 +4,9 @@ import Modal from "../modal";
 export default class LoremIpsum extends Gamemode {
     constructor(text) {
         super(text);
+
+        this.name = "Lorem Ipsum";
+        this.description = "Try typing non existing words for better accuracy and muscle memory."
     }
 
     onGameStart() {
