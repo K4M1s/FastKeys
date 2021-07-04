@@ -1,8 +1,7 @@
 <x-app-layout>
     <x-container>
         <div class="typing-field__wrapper">
-            <x-typing-field/>
-            <x-user-inferface />
+            <x-spinner />
         </div>
     </x-container>
     <script>

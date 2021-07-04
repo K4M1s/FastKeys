@@ -31,7 +31,7 @@ class GameController extends Controller
                 $response = ['error' => false];
                 $top200Words = DB::table('words')->select(['word'])->limit(200)->get();
                 $words = [];
-                for ($i=0; $i<200; $i++) {
+                for ($i=0; $i<400; $i++) {
                     array_push($words, $top200Words[rand(0, $top200Words->count()-1)]->word);
                 }
                 $response['text'] = implode(' ', $words);

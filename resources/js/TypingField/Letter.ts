@@ -1,20 +1,22 @@
-const LETTER_TYPE = {
-    PLACEHOLDER: 1,
-    TYPED_LETTER: 2,
-};
+export enum LETTER_TYPE {
+    PLACEHOLDER,
+    TYPED_LETTER
+}
 
 export default class Letter {
 
-    letter = ""
-    typedLetter = null
+    private letter = ""
+    private typedLetter: string | null = null;
+    private element: HTMLElement;
 
-    constructor(letter, letterType) {
+    constructor(letter: string, letterType: LETTER_TYPE) {
         this.letter = letter;
+        this.element = document.createElement('span');
+
         this.createElement(letterType);
     }
 
-    createElement(letterType) {
-        this.element = document.createElement('span');
+    createElement(letterType: LETTER_TYPE) {
         this.element.classList.add('typing-field__letter');
         switch(letterType) {
             case LETTER_TYPE.PLACEHOLDER:
@@ -44,7 +46,7 @@ export default class Letter {
         return this.typedLetter;
     }
 
-    setTypedLetter(letter) {
+    setTypedLetter(letter: string | null) {
         this.typedLetter = letter;
         if (this.typedLetter != null) {
             this.element.classList.add("typing-field__letter--typed")
@@ -92,9 +94,7 @@ export default class Letter {
         }
     }
 
-    appendElement(parent) {
+    appendElement(parent: HTMLElement) {
         parent.appendChild(this.element);
     }
 }
-
-export {LETTER_TYPE}

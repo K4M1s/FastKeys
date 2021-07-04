@@ -1,21 +1,21 @@
-import { create, forEach } from "lodash";
+import ModalButton from "./ModalButton";
 
 export default class Modal {
 
-    element = null;
+    private element: HTMLDivElement;
+    private title: string;
+    private content: string | undefined;
 
-    title = null;
-    content = null;
+    private buttons: ModalButton[] = [];
 
-    buttons = [];
-
-    constructor(title) {
+    constructor(title: string) {
+        this.element = document.createElement('div');
         this.title = title;
+
         this.createElement();
     }
 
     createElement() {
-        this.element = document.createElement('div');
         this.element.classList.add('modal__wrapper');
         this.element.classList.add('modal__wrapper--hide');
 
@@ -46,20 +46,27 @@ export default class Modal {
         document.body.appendChild(this.element);
     }
 
-    setContent(contentHTML) {
+    setContent(contentHTML: string) {
         this.content = contentHTML;
-        this.getContentElement().innerHTML = this.content;
+        const textElement = this.getContentElement();
+        if (!textElement) return;
+        textElement.innerHTML = this.content;
         return this;
     }
 
-    setButtons(buttonsArr) {
+    setButtons(buttons: ModalButton[]) {
         this.buttons = [];
-        buttonsArr.forEach(btn => {
-            this.buttons.push(this.createButton(btn));
+        buttons.forEach(btn => {
+            this.buttons.push(btn);
         });
-        this.getFooterElement().innerHTML = "";
+
+        const footerElement = this.getFooterElement();
+
+        if (!footerElement) return;
+
+        footerElement.innerHTML = "";
         this.buttons.forEach(button => {
-            this.getFooterElement().appendChild(button);
+            footerElement.appendChild(button.getElement());
         })
         return this;
     }
@@ -90,15 +97,5 @@ export default class Modal {
 
     getFooterElement() {
         return this.element.querySelector('.modal__footer');
-    }
-
-    createButton(btnData) {
-        const btn = document.createElement('button');
-        btn.innerText = btnData.text;
-        btnData.classList.forEach(c => {
-            btn.classList.add(c);
-        });
-        btn.addEventListener('click', btnData.action);
-        return btn;
     }
 }

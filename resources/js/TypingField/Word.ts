@@ -1,9 +1,25 @@
+import Letter from "./Letter";
 import Space from "./Space";
+
+export interface WordTimestamps {
+    start: number;
+    end: number;
+    time: number;
+    letterTime: number;
+}
 
 export default class Word {
 
+    private letters: Letter[];
+    private element: HTMLElement;
+    private startedTypingTime: Date | null;
+    private finishedTypingTime: Date | null;
+    private timestamps: WordTimestamps | null = null;
+
     constructor() {
         this.letters = [];
+        this.element = document.createElement('span');
+        
         this.createElement();
 
         this.startedTypingTime = null;
@@ -11,11 +27,10 @@ export default class Word {
     }
 
     createElement() {
-        this.element = document.createElement('span');
         this.element.classList.add("typing-field__word");
     }
 
-    addLetter(letter) {
+    addLetter(letter: Letter) {
         this.letters.push(letter)
         letter.appendElement(this.element);
     }
@@ -32,7 +47,7 @@ export default class Word {
         }
     }
 
-    addTypedLetter(letter) {
+    addTypedLetter(letter: string) {
         const emptyLetter = this.letters.filter(letter => letter.getTypedLetter() == null)[0];
         emptyLetter.setTypedLetter(letter);
 
@@ -58,7 +73,7 @@ export default class Word {
         return this.letters.filter(letter => letter.getTypedLetter() != null).length > 0;
     }
 
-    appendElement(parent) {
+    appendElement(parent: HTMLElement) {
         parent.appendChild(this.element);
     }
 
@@ -99,20 +114,39 @@ export default class Word {
         return letters.join('');
     }
 
-    getTime() {
+    getTime(): number | null {
+        if (!this.startedTypingTime || !this.finishedTypingTime) return null;
+
         return this.finishedTypingTime.getTime() - this.startedTypingTime.getTime();
     }
 
-    getLetterTime() {
-        return this.getTime() / this.letters.length;
+    getLetterTime(): number | null {
+        const time = this.getTime();
+        if (!time) return null;
+
+        return (time / this.letters.length);
     }
 
-    getTimestamps() {
-        return {
-            start: this.startedTypingTime.getTime(),
-            end: this.finishedTypingTime.getTime(),
-            time: this.getTime(),
-            letterTime: this.getLetterTime()
+    calculateTimestamps(): void {
+
+        const start = this.startedTypingTime;
+        const end = this.finishedTypingTime;
+        const time = this.getTime();
+        const letterTime = this.getLetterTime();
+
+        if (!start || !end || !time || !letterTime) {
+            throw new Error("Word is not finished?");
         }
+
+        this.timestamps = {
+            start: start.getTime(),
+            end: end.getTime(),
+            time,
+            letterTime,
+        }
+    }
+
+    getTimestamps(): WordTimestamps | null {
+        return this.timestamps;
     }
 }

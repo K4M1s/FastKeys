@@ -91,6 +91,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 body {
   line-height: 1;
+  position: relative;
 }
 
 ol, ul {
@@ -217,6 +218,9 @@ h6 {
 @media (max-width: 768px) {
   .navbar__menu {
     position: fixed;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     left: -100%;
     top: 0;
     width: 100vw;
@@ -260,6 +264,16 @@ h6 {
   gap: 1rem;
   margin-left: auto;
 }
+@media (max-width: 768px) {
+  .navbar__user-links {
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    font-size: 1.2rem;
+    padding: 0.6rem 1rem;
+  }
+}
 .navbar__user {
   position: relative;
   display: flex;
@@ -294,11 +308,46 @@ h6 {
 .navbar__user__name:hover {
   background-color: #333333;
 }
+@media (max-width: 768px) {
+  .navbar__user__name {
+    padding: 0 1rem;
+  }
+  .navbar__user__name::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0%;
+    height: 4px;
+    background-color: #e49e35;
+    transition: width ease 0.3s;
+    transform: translateX(-50%);
+    border: 0;
+  }
+  .navbar__user__name:hover {
+    background: none;
+  }
+  .navbar__user__name:hover::after {
+    width: 100%;
+  }
+}
 .navbar__user--expand .navbar__user__name::after {
   transform: translateY(-50%) rotate(45deg);
 }
-.navbar__user:not(.navbar__user--expand) .navbar__user__menu {
-  height: 0px !important;
+@media (max-width: 768px) {
+  .navbar__user--expand .navbar__user__name::after {
+    transform: translateX(-50%);
+  }
+}
+@media (min-width: 769px) {
+  .navbar__user:not(.navbar__user--expand) .navbar__user__menu {
+    height: 0px !important;
+  }
+}
+@media (max-width: 768px) {
+  .navbar__user:not(.navbar__user--expand) .navbar__user__menu {
+    left: -100%;
+  }
 }
 .navbar__user__menu {
   position: absolute;
@@ -309,6 +358,20 @@ h6 {
   background-color: #212121;
   overflow: hidden;
   transition: height ease 0.2s;
+}
+@media (max-width: 768px) {
+  .navbar__user__menu {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    transition: left ease-in-out 0.2s;
+  }
 }
 .navbar__user__menu__item {
   width: 100%;
@@ -325,6 +388,23 @@ h6 {
   height: 100%;
   text-align: left;
 }
+@media (max-width: 768px) {
+  .navbar__user__menu__item__link {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+}
+
+.footer {
+  position: absolute;
+  width: 100%;
+  background-color: #212121;
+  bottom: 0;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #ccc;
+}
 
 .auth__email-verification__footer {
   display: flex;
@@ -337,14 +417,14 @@ h6 {
   border-radius: 10px;
   font-size: 1rem;
   padding: 0.6em 1em;
-  box-shadow: 0px 0px 2px 2px #383838;
 }
 .auth__errors__header {
   font-size: 2em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .auth__errors__content {
   font-size: 1em;
+  padding-left: 1em;
 }
 
 .button {
@@ -391,8 +471,8 @@ h6 {
 .hamburger {
   position: relative;
   display: none;
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 18px;
   z-index: 1001;
   margin-left: auto;
 }
@@ -412,7 +492,7 @@ h6 {
 .hamburger__line {
   position: absolute;
   width: 100%;
-  height: 6px;
+  height: 2px;
   background-color: #ffffff;
   transition: all ease 0.3s;
 }
@@ -700,11 +780,22 @@ h6 {
   width: 100%;
   padding: 1em 0;
 }
+@media (max-width: 500px) {
+  .form__group {
+    flex-direction: column;
+  }
+}
 .form__label {
   width: 25%;
   text-align: right;
   padding: 0.6em 1em;
   font-size: 1rem;
+}
+@media (max-width: 500px) {
+  .form__label {
+    text-align: center;
+    width: 100%;
+  }
 }
 .form__control {
   width: 50%;
@@ -717,11 +808,21 @@ h6 {
   color: #ffffff;
   font-size: 1rem;
 }
+@media (max-width: 500px) {
+  .form__control {
+    width: 100%;
+  }
+}
 .form__comment {
   width: 25%;
   padding: 0.6em 1em;
   font-size: 0.8rem;
   color: #999999;
+}
+@media (max-width: 500px) {
+  .form__comment {
+    width: 100%;
+  }
 }
 .form__checkbox {
   display: block;
@@ -768,11 +869,21 @@ h6 {
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
+@media (max-width: 500px) {
+  .form__checkbox {
+    float: left;
+  }
+}
 .form__footer {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1em;
+}
+@media (max-width: 500px) {
+  .form__footer {
+    flex-direction: column;
+  }
 }
 
 * {
