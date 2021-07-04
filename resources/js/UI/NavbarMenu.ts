@@ -1,4 +1,8 @@
-export default function(): void {
+
+/**
+ * Function responsible for navbar menu. Mostly responsiveness.
+ */
+export default function NavbarMenu(): void {
     const hamburger = document.querySelector("#hamburger_checkbox");
     const menu = document.querySelector(".navbar__menu");
 

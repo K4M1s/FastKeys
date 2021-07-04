@@ -1,3 +1,7 @@
+
+/**
+ * User interface elements
+ */
 export enum USER_INTERFACE_ELEMENTS {
     PROGRESS,
     TYPOS,
@@ -5,6 +9,9 @@ export enum USER_INTERFACE_ELEMENTS {
     TIME
 }
 
+/**
+ * Element structure
+ */
 interface ElementStructure {
     element: HTMLElement;
     valueElement: HTMLElement;

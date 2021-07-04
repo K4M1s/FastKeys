@@ -1,6 +1,10 @@
 import Letter from "./Letter";
 import Space from "./Space";
 
+
+/**
+ * Word timestamps
+ */
 export interface WordTimestamps {
     start: number;
     end: number;
@@ -8,6 +12,10 @@ export interface WordTimestamps {
     letterTime: number;
 }
 
+
+/**
+ * Word class
+ */
 export default class Word {
 
     private letters: Letter[];
@@ -16,37 +24,53 @@ export default class Word {
     private finishedTypingTime: Date | null;
     private timestamps: WordTimestamps | null = null;
 
+
+    /**
+     * Creates an instance of word.
+     */
     constructor() {
         this.letters = [];
         this.element = document.createElement('span');
-        
-        this.createElement();
+        this.element.classList.add("typing-field__word");
 
         this.startedTypingTime = null;
         this.finishedTypingTime = null;
     }
 
-    createElement() {
-        this.element.classList.add("typing-field__word");
-    }
 
-    addLetter(letter: Letter) {
+    /**
+     * Adds letter to word
+     * @param letter Letter to add.
+     */
+    addLetter(letter: Letter): void {
         this.letters.push(letter)
         letter.appendElement(this.element);
     }
 
-    startedTyping() {
+    /**
+     * Set started typing time on that word.
+     */
+    startedTyping(): void {
         if (this.letters[0].getTypedLetter() == null) {
             this.startedTypingTime = new Date();
         }
     }
 
-    finishedTyping() {
+    /**
+     * Set finished typing time on that word.
+     */
+    finishedTyping(): void {
         if (this.letters[this.letters.length - 1].getTypedLetter() != null) {
             this.finishedTypingTime = new Date();
         }
     }
 
+
+    /**
+     * Adds typed letter
+     * @param letter Letter typed by user.
+     * @returns  
+     */
     addTypedLetter(letter: string) {
         const emptyLetter = this.letters.filter(letter => letter.getTypedLetter() == null)[0];
         emptyLetter.setTypedLetter(letter);
@@ -54,30 +78,55 @@ export default class Word {
         return emptyLetter;
     }
 
+
+    /**
+     * Removes last letter
+     */
     removeLastLetter() {
         const typedLetters = this.letters.filter(letter => letter.getTypedLetter() != null );
         typedLetters[typedLetters.length - 1].setTypedLetter(null);
     }
 
+
+    /**
+     * Clears letters
+     */
     clearLetters() {
         this.letters.forEach(letter => {
             letter.setTypedLetter(null);
         })
     }
 
-    hasEmptyLetters() {
+
+    /**
+     * Determines whether word has any empty letters
+     * @returns true if has empty letters
+     */
+    hasEmptyLetters(): boolean {
         return this.letters.filter(letter => letter.getTypedLetter() == null).length > 0;
     }
 
-    hasTypedLetters() {
+    /**
+     * Determines whether word has any typed letters
+     * @returns true if has any typed letters
+     */
+    hasTypedLetters(): boolean {
         return this.letters.filter(letter => letter.getTypedLetter() != null).length > 0;
     }
 
-    appendElement(parent: HTMLElement) {
+    /**
+     * Appends element to parent
+     * @param parent HTML Element
+     */
+    appendElement(parent: HTMLElement): void {
         parent.appendChild(this.element);
     }
 
-    setCursor() {
+
+    /**
+     * Sets cursor to one of its letters
+     */
+    setCursor(): void {
         this.letters.forEach(letter => {
             letter.removeCursor();
         })
@@ -87,39 +136,77 @@ export default class Word {
         }
     }
 
-    removeCursor() {
+
+    /**
+     * Removes cursor from all of its letters
+     */
+    removeCursor(): void {
         this.letters.forEach(letter => {
             letter.removeCursor();
         })
     }
 
-    isSpace() {
+
+    /**
+     * Determines whether word is space
+     * @returns true if space 
+     */
+    isSpace(): boolean {
         return this.letters.length == 1 && this.letters[0] instanceof Space;
     }
 
-    isValid() {
+
+    /**
+     * Determines whether typed word is valid
+     * @returns true if valid 
+     */
+    isValid(): boolean {
         return this.letters.filter(letter => letter.isValid()).length == this.letters.length;
     }
 
-    getCorrectness() {
+    /**
+     * Gets correctness
+     * @returns correctness 
+     */
+    getCorrectness(): number {
         return this.letters.filter(letter => letter.isValid()).length / this.letters.length;
     }
 
-    getLetters() {
+
+    /**
+     * Gets letters
+     * @returns letters 
+     */
+    getLetters(): Letter[] {
         return this.letters;
     }
 
-    getWord() {
+
+    /**
+     * Gets word
+     * @returns word 
+     */
+    getWord(): string {
         let letters = this.letters.map(letter => letter.getLetter());
         return letters.join('');
     }
 
+
+    /**
+     * Gets elapsed word time.
+     * @returns time 
+     */
     getTime(): number | null {
         if (!this.startedTypingTime || !this.finishedTypingTime) return null;
 
         return this.finishedTypingTime.getTime() - this.startedTypingTime.getTime();
     }
 
+
+    /**
+     * Gets average letter time
+     * @returns letter time 
+     */
     getLetterTime(): number | null {
         const time = this.getTime();
         if (!time) return null;
@@ -127,6 +214,10 @@ export default class Word {
         return (time / this.letters.length);
     }
 
+
+    /**
+     * Calculates timestamps
+     */
     calculateTimestamps(): void {
 
         const start = this.startedTypingTime;
@@ -146,6 +237,11 @@ export default class Word {
         }
     }
 
+
+    /**
+     * Gets timestamps
+     * @returns timestamps 
+     */
     getTimestamps(): WordTimestamps | null {
         return this.timestamps;
     }

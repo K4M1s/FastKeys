@@ -3,14 +3,21 @@ import Space from "./Space";
 import UserInterface, { USER_INTERFACE_ELEMENTS } from "./UserInterface";
 import Word from "./Word";
 
+
+/**
+ * Test mode
+ */
 export enum TEST_MODE {
     FINISH_TEXT_MODE,
     TIME_MODE
 }
 
+
+/**
+ * Typing field class
+ */
 export default class TypingField {
 
-    
     /**
      * Root element of typing field.
      */

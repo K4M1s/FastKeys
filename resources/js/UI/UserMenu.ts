@@ -1,7 +1,13 @@
-export default function(): void {
+
+/**
+ * Function is responsible for user menu in navbar (ex. hides menu if click was outside its content)
+ * Also responsive stuff...
+ */
+export default function UserMenu(): void {
     const user = document.querySelector(".navbar__user");
     const usermenu = document.querySelector(".navbar__user__menu") as HTMLElement;
 
+    // Null checks
     if (!user) return;
     if (!usermenu) return;
 

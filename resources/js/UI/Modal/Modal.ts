@@ -1,5 +1,9 @@
 import ModalButton from "./ModalButton";
 
+
+/**
+ * Modal class
+ */
 export default class Modal {
 
     private element: HTMLDivElement;
@@ -8,6 +12,11 @@ export default class Modal {
 
     private buttons: ModalButton[] = [];
 
+
+    /**
+     * Creates an instance of modal.
+     * @param title modal title
+     */
     constructor(title: string) {
         this.element = document.createElement('div');
         this.title = title;
@@ -15,6 +24,10 @@ export default class Modal {
         this.createElement();
     }
 
+
+    /**
+     * Creates modal element
+     */
     createElement() {
         this.element.classList.add('modal__wrapper');
         this.element.classList.add('modal__wrapper--hide');
@@ -46,15 +59,29 @@ export default class Modal {
         document.body.appendChild(this.element);
     }
 
-    setContent(contentHTML: string) {
+
+    /**
+     * Sets content
+     * @param contentHTML Modal content in HTML.
+     */
+    setContent(contentHTML: string): Modal {
         this.content = contentHTML;
         const textElement = this.getContentElement();
-        if (!textElement) return;
+        if (!textElement) {
+            throw new Error("Some part of modal are missing..");
+        }
         textElement.innerHTML = this.content;
+
         return this;
     }
 
-    setButtons(buttons: ModalButton[]) {
+
+    /**
+     * Sets buttons
+     * @param buttons ModalButtons array.
+     * @returns Modal
+     */
+    setButtons(buttons: ModalButton[]): Modal {
         this.buttons = [];
         buttons.forEach(btn => {
             this.buttons.push(btn);
@@ -62,26 +89,40 @@ export default class Modal {
 
         const footerElement = this.getFooterElement();
 
-        if (!footerElement) return;
+        if (!footerElement) {
+            throw new Error("Some part of modal are missing..");
+        }
 
         footerElement.innerHTML = "";
         this.buttons.forEach(button => {
             footerElement.appendChild(button.getElement());
-        })
+        });
+
         return this;
     }
 
-    show() {
+
+    /**
+     * Shows modal
+     * @returns Modal
+     */
+    show(): Modal {
         this.element.classList.remove('modal__wrapper--hide');
         this.element.classList.add('modal__wrapper--showing');
         setTimeout(()=> {
             this.element.classList.remove('modal__wrapper--showing');
             this.element.classList.add('modal__wrapper--show');
         }, 690);
+
         return this;
     }
 
-    hide() {
+
+    /**
+     * Hides modal
+     * @returns Modal
+     */
+    hide(): Modal {
         this.element.classList.remove('modal__wrapper--show');
         this.element.classList.add('modal__wrapper--hiding');
         setTimeout(()=> {
@@ -91,11 +132,12 @@ export default class Modal {
         return this;
     }
 
-    getContentElement() {
+    
+    getContentElement(): HTMLElement | null {
         return this.element.querySelector('.modal__body > p');
     }
 
-    getFooterElement() {
+    getFooterElement(): HTMLElement | null {
         return this.element.querySelector('.modal__footer');
     }
 }
