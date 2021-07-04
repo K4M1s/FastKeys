@@ -133,10 +133,19 @@ export default class Modal {
     }
 
     
+    /**
+     * Gets content element
+     * @returns content element 
+     */
     getContentElement(): HTMLElement | null {
         return this.element.querySelector('.modal__body > p');
     }
 
+
+    /**
+     * Gets footer element
+     * @returns footer element 
+     */
     getFooterElement(): HTMLElement | null {
         return this.element.querySelector('.modal__footer');
     }
