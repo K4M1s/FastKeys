@@ -1,3 +1,4 @@
+import { GameEndData, GameResult } from "../common/types";
 import Letter from "../TypingField/Letter";
 import TypingField, { TEST_MODE } from "../TypingField/TypingField";
 import Word from "../TypingField/Word";
@@ -10,12 +11,12 @@ export default class Gamemode {
     /**
      * Name of gamemode
      */
-    protected name = "Gamemode name";
+    public name = "Gamemode name";
 
     /**
      * Description of gamemode
      */
-    protected description = "Longer gamemode description.";
+    public description = "Longer gamemode description.";
 
     /**
      * Game object
@@ -26,11 +27,17 @@ export default class Gamemode {
     /**
      * Creates an instance of gamemode.
      * @param text Text to type
+     * @param name Gamemode name
+     * @param description Gamemode description
+     * @param text Text to type
      * @param [mode] Test mode
      * @param [time] Time in TIME_MDOE
      */
-    constructor(text: string, mode=TEST_MODE.FINISH_TEXT_MODE, time=0) {
+    constructor(text: string, name: string, description: string, mode=TEST_MODE.FINISH_TEXT_MODE, time=0) {
         const typingFieldElement = document.querySelector(".typing-field__wrapper") as HTMLElement;
+
+        this.name = name;
+        this.description = description;
 
         if (!typingFieldElement) {
             throw new Error("Typing Field element is missing.");
@@ -44,9 +51,9 @@ export default class Gamemode {
     /**
      * Registers events
      */
-    registerEvents() {
+    public registerEvents() {
         this.game.onGameStart(this.onGameStart);
-        this.game.onGameEnd(this.onGameEnd);
+        this.game.onGameEnd(this.onGameEnd, this);
         this.game.onGameBreak(this.onGameBreak);
 
         this.game.onWordType(this.onWordType);
@@ -58,7 +65,7 @@ export default class Gamemode {
      * Game start hook
      * @param data 
      */
-    onGameStart(data: any) {
+    public onGameStart(data: any) {
 
     }
 
@@ -66,15 +73,15 @@ export default class Gamemode {
      * Game end hook
      * @param data 
      */
-    onGameEnd(data: any) {
-
+    public onGameEnd(data: GameEndData) {
+        console.log(data);
     }
 
     /**
      * Game break hook
      * @param data 
      */
-    onGameBreak(data: any) {
+    public onGameBreak(data: any) {
 
     }
 
@@ -82,7 +89,7 @@ export default class Gamemode {
      * Word typed hook
      * @param word Typed word
      */
-    onWordType(word: Word) {
+    public onWordType(word: Word) {
 
     }
 
@@ -90,7 +97,7 @@ export default class Gamemode {
      * Letter typed hook
      * @param letter Typed letter
      */
-    onLetterType(letter: Letter) {
+    public onLetterType(letter: Letter) {
 
     }
 }

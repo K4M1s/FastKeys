@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Word;
 use joshtronic\LoremIpsum;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 
 class GameController extends Controller
 {
@@ -21,34 +20,38 @@ class GameController extends Controller
     }
 
     public function text($game) {
+        $response = ['error' => false];
+        Cookie::forget('textHash');
         switch($game) {
             case "loremipsum":
-                $response = ['error' => false];
                 $lorem = new LoremIpsum();
-                $response['text'] = $lorem->words(50);
-                return response()->json($response);
+                $response['text'] = $lorem->words(10);
+
+                break;
             case "speedtest":
-                $response = ['error' => false];
                 $top200Words = DB::table('words')->select(['word'])->limit(200)->get();
                 $words = [];
                 for ($i=0; $i<400; $i++) {
                     array_push($words, $top200Words[rand(0, $top200Words->count()-1)]->word);
                 }
                 $response['text'] = implode(' ', $words);
-                return response()->json($response);
+
+                break;
+            default:
+                abort(404);
         }
-        abort(404);
+        return response()->json($response)->withCookie(cookie('textHash', sha1($response['text']), 2));
     }
 
     public function index() {
         return view('gamemodes.index');
     }
 
-    private function loremIpsum() {
+    public function loremIpsum() {
         return view('gamemodes.loremipsum');
     }
 
-    private function speedtest() {
+    public function speedtest() {
         return view('gamemodes.speedtest');
     }
 }

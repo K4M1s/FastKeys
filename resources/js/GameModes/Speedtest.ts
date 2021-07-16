@@ -14,23 +14,20 @@ export default class Speedtest extends Gamemode {
      * @param text Text to type
      */
     constructor(text: string) {
-        super(text, TEST_MODE.TIME_MODE, 60);
-
-        this.name = "Speed Test";
-        this.description = "Classical speed test. Try how fast you type."
+        super(text, "Speed Test", "Classical speed test. Try how fast you type.", TEST_MODE.TIME_MODE, 60);
     }
 
     /**
      * @inheritdoc
      */
-    onGameStart() {
+    public onGameStart() {
         console.log("Game has started");
     }
 
     /**
      * @inheritdoc
      */
-    async onGameEnd(data: any) {
+    public onGameEnd = (data: any) => {
         const modal = new Modal('Congrats!');
         modal.setContent(`You have finished this test with speed of ${data.speed} WPM`);
         const modalButton = new ModalButton("Close", ["button", "button--primary", "button--outline"], () => { modal.hide() });
@@ -43,7 +40,7 @@ export default class Speedtest extends Gamemode {
     /**
      * @inheritdoc
      */
-    onGameBreak(data: any) {
+    public onGameBreak(data: any) {
         const modal = new Modal('STOP!');
         modal.setContent(`Stop hiting your keyboard!`);
         const modalButton = new ModalButton("Close", ["button", "button--primary", "button--outline"], () => { modal.hide() });

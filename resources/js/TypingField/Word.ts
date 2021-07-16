@@ -186,8 +186,17 @@ export default class Word {
      * Gets word
      * @returns word 
      */
-    getWord(): string {
+     getWord(): string {
         let letters = this.letters.map(letter => letter.getLetter());
+        return letters.join('');
+    }
+
+    /**
+     * Gets typed word
+     * @returns typed word 
+     */
+    getTypedWord(): string {
+        let letters = this.letters.map(letter => letter.getTypedLetter());
         return letters.join('');
     }
 

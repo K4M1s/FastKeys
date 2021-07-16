@@ -562,7 +562,6 @@ h6 {
 }
 .typing-field__wrapper {
   width: 100%;
-  min-height: 90vh;
   margin-top: 30px;
   display: flex;
   flex-direction: column;

@@ -1,3 +1,5 @@
+import { GameEndData, GameResult, ResultWordData } from "../common/types";
+import Gamemode from "../GameModes/Gamemode";
 import Letter, { LETTER_TYPE } from "./Letter";
 import Space from "./Space";
 import UserInterface, { USER_INTERFACE_ELEMENTS } from "./UserInterface";
@@ -187,7 +189,6 @@ export default class TypingField {
 
         if (this.testMode == TEST_MODE.TIME_MODE) {
             this.userInteface.setVisible([
-                USER_INTERFACE_ELEMENTS.PROGRESS,
                 USER_INTERFACE_ELEMENTS.TIME,
                 USER_INTERFACE_ELEMENTS.TYPOS,
                 USER_INTERFACE_ELEMENTS.SPEED,
@@ -691,6 +692,19 @@ export default class TypingField {
         return Math.abs(smallest - biggest);
     }
 
+
+    /**
+     * Gets whole text
+     * @returns whole text 
+     */
+    private getWholeText(): string {
+        const words: string[] = this.text.map(word => {
+            return word.getWord();
+        })
+
+        return words.join('');
+    }
+
     breakGame() {
         this.endTime = new Date();
         this.inputFieldElement.disabled = true;
@@ -712,12 +726,23 @@ export default class TypingField {
 
         this.calculateWordsTimestamps();
 
-        this.fireEvent('gameEnd', {
+        const words: ResultWordData[] = this.getTypedWords().map((w: Word) => {
+            return {
+                word: w.getWord(),
+                typed: w.getTypedWord(),
+                timestamps: w.getTimestamps()
+            }
+        });
+
+        this.fireGameEnd({
             speed: this.calculateFinalSpeed(),
-            correctness: this.calculateCorrectness(),
+            accuracy: this.calculateCorrectness(),
             typos: this.calculateTypos(),
-            words: this.getTypedWords(),
-            letterDeltaTime: this.getLetterDeltaTime()
+            words: words,
+            originalText: this.getWholeText(),
+            letterDeltaTime: this.getLetterDeltaTime(),
+            startTime: this.startTime!,
+            endTime: this.endTime
         });
     }
 
@@ -728,13 +753,10 @@ export default class TypingField {
     onWordTypeCallbacks: Function[] = [];
     onLetterTypeCallbacks: Function[] = [];
 
-    fireEvent(type: string, data: any) {
+    fireEvent = (type: string, data: any) => {
         switch(type) {
             case "gameStart":
                 this.onGameStartCallbacks.forEach(callback => { callback(data) });
-                break;
-            case "gameEnd":
-                this.onGameEndCallbacks.forEach(callback => { callback(data) });
                 break;
             case "gameBreak":
                 this.onGameBreakCallbacks.forEach(callback => { callback(data) });
@@ -748,12 +770,16 @@ export default class TypingField {
         }
     }
 
+    fireGameEnd(data: GameEndData) {
+        this.onGameEndCallbacks.forEach(callback => { callback(data) });
+    }
+
     onGameStart(callback: Function) {
         this.onGameStartCallbacks.push(callback);
     }
 
-    onGameEnd(callback: Function) {
-        this.onGameEndCallbacks.push(callback);
+    onGameEnd(callback: Function, gamemode: Gamemode) {
+        this.onGameEndCallbacks.push((data: GameEndData) => { callback.call(gamemode, data) });
     }
 
     onGameBreak(callback: Function) {
