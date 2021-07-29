@@ -1,4 +1,5 @@
 .container {
+    position: relative;
     width: 100%;
     max-width: 1024px;
     margin: 0 auto;
@@ -10,4 +11,8 @@
         padding-right: 1rem;
     }
 
+}
+
+.container:not(.navbar__container) { 
+    min-height: calc(100vh - 100px);
 }

@@ -18,6 +18,7 @@ class CreateResultsTable extends Migration
             $table->foreignId('user_id')->nullable()->constrained();
             $table->integer('speed');
             $table->float('accuracy');
+            $table->integer('typos');
             $table->string('game');
             $table->timestamps();
         });

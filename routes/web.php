@@ -24,11 +24,11 @@ Route::get('/game', [GameController::class, 'index'])->name('game/index');
 Route::get('/game/{game}', [GameController::class, 'game'])->name('game');
 Route::get('/game/{game}/text', [GameController::class, 'text'])->name('game/text');
 
-Route::get('/result/{result}', [ResultController::class, 'index'])->name('result/index');
+Route::get('/result', [ResultController::class, 'index'])->name('result/index');
 
 Route::middleware(['throttle:result'])->group(function () {
     Route::post('/result', [ResultController::class, 'store'])->name('result/store');
 });
 
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
