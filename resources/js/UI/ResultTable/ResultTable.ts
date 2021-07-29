@@ -19,7 +19,7 @@ export default class ResutlTable {
         this.createTable()
 
         this.renderResultBody();
-        // this.startRefreshTimer();
+        this.startRefreshTimer();
     }
 
     private createTable(): void {
