@@ -25,7 +25,7 @@ class GameController extends Controller
         switch($game) {
             case "loremipsum":
                 $lorem = new LoremIpsum();
-                $response['text'] = $lorem->words(10);
+                $response['text'] = $lorem->words(40);
 
                 break;
             case "speedtest":
