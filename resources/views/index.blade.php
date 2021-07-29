@@ -12,7 +12,7 @@
                 </div>
                 <div class="homepage__main-section__option">
                     <h4>Speed Test</h4>
-                    <p>Test your speed typing random heavli used english words (TOP 100)</p>
+                    <p>Test your speed while typing heavily used random english words (TOP 100)</p>
                     <a href="{{ route("game", "speedtest") }}" class="button button--primary button--outline">Start</a>
                 </div>
 
