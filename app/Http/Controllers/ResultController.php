@@ -9,19 +9,25 @@ use Illuminate\Support\Facades\Auth;
 
 class ResultController extends Controller
 {
-    public function index(Result $result)
+    public function index(Request $request)
     {
-        return response()->json($result->user);
+        $game = $request->get('game', null);
+
+        $results = Result::latest()->take(10)->with('user');
+        if ($game !== null) {
+            $results = $results->where('game', '=', $game);
+        }
+        return $results->get();
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
+            'gamemode' => 'string|required',
             'originalText' => 'string|required',
             'speed' => 'numeric|required',
             'accuracy' => 'numeric|required',
             'typos' => 'numeric|required',
-            'game' => 'string|required',
             'words' => 'json|required',
             'startTime' => 'numeric|required',
             'endTime' => 'numeric|required',
@@ -35,8 +41,9 @@ class ResultController extends Controller
         $result = new Result();
         $result->user_id = Auth::check() ? Auth::user()->id : null;
         $result->speed = $data['speed'];
-        $result->accuracy = $data['speed'];
-        $result->game = $data['game'];
+        $result->accuracy = $data['accuracy'];
+        $result->typos = $data['typos'];
+        $result->game = $data['gamemode'];
         
         if($result->save() === false) {
             return response()->status(500);

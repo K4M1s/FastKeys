@@ -4,8 +4,6 @@ import Result from "./Result";
 export default class ResultManager {
     public static save(result: Result) {
         return new Promise(async (resolve, reject) => {
-            console.log(result);
-
             const formdata = new FormData();
 
             for (const [key, value] of Object.entries(result)) {

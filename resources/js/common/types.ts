@@ -1,9 +1,23 @@
 import { WordTimestamps } from "../TypingField/Word";
 
+export type Newable<T> = { new (...args: any[]): T; };
+
 export interface AppWindow extends Window {
     Laravel: any;
     initGame: Function;
     game: any
+}
+
+export interface Gamemode {
+    name: string;
+    description: string;
+
+    prepareGame(): Promise<void>;
+    loadText(): Promise<string>;
+
+
+    onStartedTyping(): void;
+    onFinishedTyping(): void;
 }
 
 export interface GameEndData {

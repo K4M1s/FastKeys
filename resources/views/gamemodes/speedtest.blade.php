@@ -1,8 +1,7 @@
 <x-app-layout>
     <x-container>
-        <div class="typing-field__wrapper">
-            <x-spinner />
-        </div>
+        <div class="typing-field__wrapper"></div>
+        <x-result-table />
     </x-container>
     <script>
         window.onload = function() {

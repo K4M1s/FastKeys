@@ -31,7 +31,6 @@
 
     &__wrapper {
         width: 100%;
-        margin-top: 30px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -90,5 +89,13 @@
             background-color: #fafafa;
             animation: cursorBlink 1s infinite;
         }
+    }
+
+    &__header {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 20px;
     }
 }
