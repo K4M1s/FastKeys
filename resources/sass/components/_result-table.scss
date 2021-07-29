@@ -19,6 +19,10 @@
         #{$parent}__column {
             font-size: 1.2rem;
         }
+
+        @media screen and (max-width: 500px) {
+            display: none;
+        }
     }
 
     &__body {
@@ -30,6 +34,11 @@
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
         overflow: hidden;
+
+        @media screen and (max-width: 500px) {
+            border-top: solid 3px $primary;
+            border-radius: 10px;
+        }
 
         #{$parent}__row {
             &:hover {
@@ -46,6 +55,12 @@
         #{$parent}__column {
             line-height: 30px;
         }
+
+        @media screen and (max-width: 500px) {
+            flex-wrap: wrap;
+            height: auto;
+            border-bottom: dashed 2px $gray-shadow;
+        }
     }
 
     &__column {
@@ -56,18 +71,45 @@
 
         &--user {
             width: 40%;
+            &::before {
+                content: "Username: ";
+            }
         }
 
         &--speed {
             width: 20%;
+            &::before {
+                content: "Speed: ";
+            }
         }
 
         &--accuracy {
             width: 20%;
+            &::before {
+                content: "Accuracy: ";
+            }
         }
 
         &--typos {
             width: 20%;
+            &::before {
+                content: "Typos: ";
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            width: 100%;
+            flex-direction: row;
+            gap: 10px;
+            &:nth-child(2n) {
+                text-align: right;
+            }
+        }
+
+        @media screen and (min-width: 501px) {
+            &::before {
+                content: '';
+            }
         }
     }
 

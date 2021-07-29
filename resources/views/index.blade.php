@@ -8,7 +8,7 @@
 
             <div class="homepage__main-section__options">
                 <div class="homepage__main-section__options__header">
-                    <h1>Choose what you want to do</h1>
+                    <h1>Choose what you want to play</h1>
                 </div>
                 <div class="homepage__main-section__option">
                     <h4>Speed Test</h4>

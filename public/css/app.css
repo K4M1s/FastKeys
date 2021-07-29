@@ -230,6 +230,7 @@ h6 {
     top: 0;
     width: 100vw;
     height: 100vh;
+    z-index: 1000;
     background-color: #212121;
     transition: left ease 0.3s;
   }
@@ -920,6 +921,11 @@ h6 {
 .result-table__header .result-table__column {
   font-size: 1.2rem;
 }
+@media screen and (max-width: 500px) {
+  .result-table__header {
+    display: none;
+  }
+}
 .result-table__body {
   width: 100%;
   display: flex;
@@ -929,6 +935,12 @@ h6 {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   overflow: hidden;
+}
+@media screen and (max-width: 500px) {
+  .result-table__body {
+    border-top: solid 3px #e49e35;
+    border-radius: 10px;
+  }
 }
 .result-table__body .result-table__row:hover {
   background-color: #383838;
@@ -941,6 +953,13 @@ h6 {
 .result-table__row .result-table__column {
   line-height: 30px;
 }
+@media screen and (max-width: 500px) {
+  .result-table__row {
+    flex-wrap: wrap;
+    height: auto;
+    border-bottom: dashed 2px #383838;
+  }
+}
 .result-table__column {
   display: flex;
   flex-direction: column;
@@ -950,14 +969,41 @@ h6 {
 .result-table__column--user {
   width: 40%;
 }
+.result-table__column--user::before {
+  content: "Username: ";
+}
 .result-table__column--speed {
   width: 20%;
+}
+.result-table__column--speed::before {
+  content: "Speed: ";
 }
 .result-table__column--accuracy {
   width: 20%;
 }
+.result-table__column--accuracy::before {
+  content: "Accuracy: ";
+}
 .result-table__column--typos {
   width: 20%;
+}
+.result-table__column--typos::before {
+  content: "Typos: ";
+}
+@media screen and (max-width: 500px) {
+  .result-table__column {
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
+  }
+  .result-table__column:nth-child(2n) {
+    text-align: right;
+  }
+}
+@media screen and (min-width: 501px) {
+  .result-table__column::before {
+    content: "";
+  }
 }
 .result-table__wrapper {
   width: 100%;
@@ -1010,6 +1056,7 @@ h6 {
   gap: 1rem;
   border: solid 3px #e49e35;
   border-radius: 10px;
+  min-width: 280px;
 }
 .homepage__main-section__option > p {
   line-height: 1.5rem;

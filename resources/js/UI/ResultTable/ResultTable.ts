@@ -19,7 +19,7 @@ export default class ResutlTable {
         this.createTable()
 
         this.renderResultBody();
-        this.startRefreshTimer();
+        // this.startRefreshTimer();
     }
 
     private createTable(): void {
@@ -98,10 +98,10 @@ export default class ResutlTable {
                         col.innerText = result.user ? result.user : "Anonymous";
                         break;
                     case "speed":
-                        col.innerText = result.speed.toString();
+                        col.innerText = `${result.speed.toString()} WPM`;
                         break;
                     case "accuracy":
-                        col.innerText = result.accuracy.toString();
+                        col.innerText = `${result.accuracy.toString()}%`;
                         break;
                     case "typos":
                         col.innerText = result.typos.toString();

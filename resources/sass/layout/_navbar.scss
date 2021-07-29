@@ -53,6 +53,7 @@
             top: 0;
             width: 100vw;
             height: 100vh;
+            z-index: 1000;
             background-color: $card;
             transition: left ease 0.3s;
 
